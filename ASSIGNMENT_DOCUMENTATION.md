@@ -328,23 +328,23 @@ The scheduling logic and synchronization mechanisms work reliably under varying 
 
 ### What I learned about synchronization:
 
-[6-8 sentences about key concepts, challenges, insights]
+[I learned that synchronization is essential when multiple threads access shared resources. Without it, race conditions can lead to incorrect results and unpredictable behavior. I also understood the difference between locks and semaphores and when to use each. Fine-grained locking improves performance by reducing contention, while semaphores are useful for controlling access to limited resources. One challenge was ensuring all locks are released properly, which I solved using try-finally blocks. Overall, synchronization helps achieve both correctness and efficiency in concurrent programs.]
 
 ---
 
 ### Real-world applications:
 
-Give TWO examples where synchronization is critical:
-
 **Example 1**: 
-
+Operating systems use synchronization to manage CPU scheduling and ensure processes do not interfere with each other.
 **Example 2**: 
-
+Banking systems use synchronization to safely update account balances when multiple transactions occur at the same time.
 ---
 
 ### How I would explain synchronization to others:
 
-[Explain to someone who just finished Assignment 1 - use simple terms and analogies]
+[Synchronization is like organizing people who want to use the same resource. Imagine there is only one printer in a room, and many students want to print. If everyone tries to use it at the same time, chaos will happen. So we create a rule: only one person can use the printer at a time.
+
+In programming, threads are like those students, and shared resources (like variables or CPU) are like the printer. Synchronization makes sure that threads take turns properly, so no data gets corrupted and everything works correctly.]
 
 ---
 
@@ -353,28 +353,29 @@ Give TWO examples where synchronization is critical:
 **Repository URL**: 
 
 **Number of commits**: 
-
+5
 **Commit messages**: 
-1. 
-2. 
-3. 
-4. 
+1. Initial project setup and structure
+2. Implement Process class and scheduling logic
+3. Add synchronization using ReentrantLock
+4. Implement Semaphore for CPU control
+5. Final testing and bug fixes 
 
 ---
 
 ## Summary
 
 **Total time spent on assignment**: 
-
+Approximately 6–8 hours
 **Key takeaways**: 
-1. 
-2. 
-3. 
+1. Synchronization is essential for correct multithreaded programs
+2. Fine-grained locking improves performance and concurrency
+3. Semaphores are useful for controlling access to limited resources
 
 **Most challenging aspect**: 
-
+Understanding how to properly manage multiple threads without causing race conditions or deadlocks was the most difficult part.
 **What I'm most proud of**: 
-
+I am most proud of successfully implementing synchronization using both locks and semaphores while keeping the program efficient and correct.
 ---
 
 **End of Documentation**
