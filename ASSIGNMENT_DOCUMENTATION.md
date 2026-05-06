@@ -168,52 +168,104 @@ However, in simpler systems or when operations are highly interdependent, coarse
 ### Critical Section #1: Counter Variables
 
 **Which variables**: 
-
+The shared counter variables are:
+* contextSwitchCount
+* completedProcessCount
+* totalWaitingTime
 **Why they need protection**: 
-
+These variables are shared among multiple threads, and they are updated concurrently. Operations like increment (++) and addition (+=) are not atomic, meaning they involve multiple steps (read → modify → write). Without synchronization, multiple threads could overwrite each other’s updates, leading to incorrect values such as lost increments or inaccurate total waiting time.
 **Synchronization mechanism used**: 
-
+I used ReentrantLock (fine-grained locking) by assigning a separate lock for each variable:
+* contextSwitchLock
+* completedProcessLock
+* waitingTimeLock
+This ensures that each counter is updated safely while allowing other counters to be accessed concurrently.
 **Code snippet**:
 ```java
-// Paste your implementation here
+// // Increment context switch counter
+public static void incrementContextSwitch() {
+    contextSwitchLock.lock();
+    try {
+        contextSwitchCount++;
+    } finally {
+        contextSwitchLock.unlock();
+    }
+}
+
+// Increment completed process counter
+public static void incrementCompletedProcess() {
+    completedProcessLock.lock();
+    try {
+        completedProcessCount++;
+    } finally {
+        completedProcessLock.unlock();
+    }
+}
+
+// Add waiting time
+public static void addWaitingTime(long time) {
+    waitingTimeLock.lock();
+    try {
+        totalWaitingTime += time;
+    } finally {
+        waitingTimeLock.unlock();
+    }
+}
 ```
 
 **Justification**: 
-
+I used separate (fine-grained) locks for each counter because they are independent variables. This allows multiple threads to update different counters at the same time without blocking each other, which improves performance. Using one lock for all counters would reduce concurrency and make the program slower without any benefit.
 ---
 
 ### Critical Section #2: Execution Log
 
 **What resource**: 
-
+The shared resource is the executionLog, which is a List<String> used to store log messages from different threads during execution.
 **Why it needs protection**: 
-
+Multiple threads may attempt to write to the executionLog at the same time. Since ArrayList is not thread-safe, concurrent modifications can lead to data corruption, inconsistent log entries, or even runtime exceptions like ConcurrentModificationException. Therefore, access must be synchronized to ensure safe and correct logging.
 **Synchronization mechanism used**: 
-
+I used a ReentrantLock (logLock) to protect access to the executionLog. This ensures that only one thread can modify the log at a time.
 **Code snippet**:
 ```java
-// Paste your implementation here
+// Method to log execution safely
+public static void logExecution(String message) {
+    logLock.lock();
+    try {
+        executionLog.add(message);
+    } finally {
+        logLock.unlock();
+    }
+}
 ```
 
 **Justification**: 
-
+Using a ReentrantLock provides explicit control over locking and ensures thread-safe access to the shared log. I used a separate lock (fine-grained locking) instead of a global lock to reduce contention and allow other independent operations (like updating counters) to proceed concurrently. This improves overall performance while maintaining correctness.
 ---
 
 ### Critical Section #3: CPU Semaphore
 
 **Purpose of semaphore**: 
-
+The semaphore is used to control access to the CPU, ensuring that only one process (thread) executes at a time.
 **Number of permits and why**: 
-
+A single permit (1) is used to simulate a single-core CPU, where only one process can run at any moment.
 **Where implemented**: 
-
+It is implemented in the SharedResources class and used inside the run() and runToCompletion() methods of the Process class.
 **Code snippet**:
 ```java
-// Paste your implementation here
+// Semaphore declaration
+public static final Semaphore cpuSemaphore = new Semaphore(1);
+
+// Usage inside run()
+SharedResources.cpuSemaphore.acquire();
+try {
+    // process execution
+} finally {
+    SharedResources.cpuSemaphore.release();
+}
 ```
 
 **Effect on program behavior**: 
-
+The semaphore ensures that processes execute one at a time, preventing overlapping execution. This simulates real CPU scheduling and avoids conflicts between threads accessing the CPU.
 ---
 
 ## Part 4: Testing and Verification (2 marks)
