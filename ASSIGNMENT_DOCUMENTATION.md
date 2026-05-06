@@ -106,7 +106,11 @@ Performed full testing with multiple runs and different scenarios.
 
 **Your Answer**:
 
-[Your answer here - 4-6 sentences with code examples]
+[One race condition occurs on the shared variable contextSwitchCount. Multiple threads increment this counter using contextSwitchCount++, which is not an atomic operation. If two threads execute it simultaneously, one update may be lost, resulting in an incorrect count of context switches.
+
+Another race condition occurs on totalWaitingTime, where multiple threads add waiting times using totalWaitingTime += time. Concurrent access can cause inconsistent accumulated values due to overlapping read/write operations.
+
+The problem arises because threads access and modify shared resources without synchronization, leading to unpredictable results. For example, incorrect statistics such as lower context switch counts or wrong total waiting time could be produced.]
 
 ---
 
@@ -115,7 +119,11 @@ Performed full testing with multiple runs and different scenarios.
 
 **Your Answer**:
 
-[Your answer here - explain your implementation choices]
+[ReentrantLock is a mutual exclusion lock that allows only one thread to access a critical section at a time, with more control than synchronized (such as manual lock/unlock). A Semaphore, on the other hand, controls access to a resource by allowing a fixed number of threads (permits).
+
+In my code, I used multiple ReentrantLocks (fine-grained locks) to protect shared counters like contextSwitchCount, completedProcessCount, and totalWaitingTime. This ensures thread-safe updates.
+
+I used a Semaphore (cpuSemaphore) with one permit to simulate CPU access, ensuring that only one process (thread) executes on the CPU at a time. This models real CPU scheduling behavior.]
 
 ---
 
@@ -124,7 +132,13 @@ Performed full testing with multiple runs and different scenarios.
 
 **Your Answer**:
 
-[Your answer here - reference try-finally blocks, lock ordering, etc.]
+[Deadlock occurs when two or more threads are blocked forever, each waiting for a resource held by another thread. This usually happens due to circular waiting and improper resource handling.
+
+One prevention technique is using try-finally blocks, which ensures that locks are always released even if an exception occurs. In my code, every lock and semaphore acquisition is followed by a finally block that releases it.
+
+Another technique is avoiding circular wait by not holding multiple locks simultaneously or by maintaining a consistent lock acquisition order. In my implementation, each lock is used independently, reducing the risk of deadlock.
+
+Additionally, the semaphore is carefully released after use, ensuring no thread holds the CPU indefinitely.]
 
 ---
 
@@ -137,7 +151,15 @@ Performed full testing with multiple runs and different scenarios.
 
 **Your Answer**:
 
-[Your answer here - explain coarse-grained vs fine-grained locking, independence of counters, concurrency implications. Show understanding of when to use each approach. 5-8 sentences expected.]
+[I used fine-grained locking by assigning a separate ReentrantLock for each shared counter (contextSwitchLock, completedProcessLock, and waitingTimeLock).
+
+I chose this approach because the three counters are independent, meaning updating one does not affect the others. Using separate locks allows multiple threads to update different counters concurrently, improving performance.
+
+The trade-off is that fine-grained locking increases code complexity and requires careful management, while coarse-grained locking (one lock for all counters) is simpler but reduces concurrency since only one thread can access any counter at a time.
+
+Given that the counters are independent, fine-grained locking provides better concurrency because it minimizes contention and allows more parallel execution.
+
+However, in simpler systems or when operations are highly interdependent, coarse-grained locking may be preferred for simplicity and safety.]
 
 ---
 
