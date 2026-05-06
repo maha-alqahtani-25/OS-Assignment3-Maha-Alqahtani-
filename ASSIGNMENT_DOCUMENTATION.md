@@ -273,52 +273,55 @@ The semaphore ensures that processes execute one at a time, preventing overlappi
 ### Test 1: Consistency Check
 **What I tested**: Running program multiple times to verify consistent results
 
-**Testing procedure**: 
+**Testing procedure**: Run the program multiple times (at least 5 times) using:
 ```bash
-# Commands used (run the program at least 5 times)
+javac SchedulerSimulationSync.java
+java SchedulerSimulationSync
 ```
 
 **Results**: 
-(Show that running multiple times produces consistent, correct results)
+(Each run produced consistent and correct statistics such as total completed processes, context switches, and waiting time. No incorrect or negative values were observed.)
 
 **Why synchronization is necessary**: 
-(Explain what race conditions COULD occur without synchronization, even if you didn't observe them. Explain which shared resources need protection and why.)
+(Without synchronization, race conditions could occur when multiple threads update shared resources like contextSwitchCount, totalWaitingTime, and executionLog. This may lead to lost updates, incorrect totals, or corrupted logs. These shared resources require protection to ensure data consistency.)
 
 **Conclusion**: 
-
+Synchronization ensures reliable and consistent results across multiple executions.
 ---
 
 ### Test 2: Exception Testing
 **What I tested**: Checking for ConcurrentModificationException
 
 **Testing procedure**: 
-
+Run the program repeatedly while monitoring for runtime exceptions.
 **Results**: 
-
+No ConcurrentModificationException or other concurrency-related exceptions occurred.
 **What this proves**: 
-
+It proves that shared resources (especially executionLog) are properly synchronized and safely accessed by multiple threads.
 ---
 
 ### Test 3: Correctness Verification
-**What I tested**: Verifying correct final values (total burst time, context switches, etc.)
-
+**What I tested**: 
+Verification of final statistics (completed processes, waiting time, etc.)
 **Expected values**: 
-
+* Completed processes = total number of processes
+* Waiting time ≥ 0
+* Context switches ≥ number of processes
 **Actual values**: 
-
+All values matched expectations and were logically correct.
 **Analysis**: 
-
+The synchronization mechanisms ensured accurate calculations and prevented data inconsistencies.
 ---
 
 ### Test 4: Different Scenarios
-**Scenario tested**: [e.g., different time quantum, more processes, etc.]
-
+**Scenario tested**: 
+Different time quantum and varying number of processes (random values).
 **Purpose**: 
-
+To test program behavior under different workloads.
 **Results**: 
-
+The program handled all scenarios correctly and maintained stable performance.
 **What I learned**: 
-
+The scheduling logic and synchronization mechanisms work reliably under varying conditions.
 ---
 
 ## Part 5: Reflection and Learning
