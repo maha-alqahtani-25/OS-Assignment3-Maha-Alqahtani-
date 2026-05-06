@@ -31,69 +31,69 @@
 
 Document your development process with **minimum 3 entries** showing progression:
 
-### Entry 1 - [Date, Time]
+### Entry 1 - [May 3, 6:00 PM]
 **What I implemented**: 
-
+Initialized the project and created the basic structure including Process class and main scheduler loop.
 **Challenges encountered**: 
-
+Understanding how to simulate process execution using threads.
 **How I solved it**: 
-
+Reviewed Java threading basics and used Runnable to represent each process.
 **Testing approach**: 
-
+Ran simple threads with fixed execution time to verify correct behavior.
 **Time spent**: 
-
+1.5 hours
 ---
 
-### Entry 2 - [Date, Time]
+### Entry 2 - [May 3, 9:00 PM]
 **What I implemented**: 
-
+Implemented Round Robin scheduling logic using a queue.
 **Challenges encountered**: 
-
+Managing process re-queuing after each time quantum.
 **How I solved it**: 
-
+Used a Queue<Thread> and re-added processes if they were not finished.
 **Testing approach**: 
-
+Tested with a small number of processes and printed execution order.
 **Time spent**: 
-
+2 hours
 ---
 
-### Entry 3 - [Date, Time]
+### Entry 3 - [May 4,5:00 PM]
 **What I implemented**: 
-
+Added shared counters (contextSwitchCount, totalWaitingTime, etc.).
 **Challenges encountered**: 
-
+Incorrect values due to concurrent updates (race conditions).
 **How I solved it**: 
-
+Introduced ReentrantLock to protect shared variables.
 **Testing approach**: 
-
+Ran the program multiple times and compared results for consistency.
 **Time spent**: 
-
+2 hours
 ---
 
-### Entry 4 - [Date, Time]
+### Entry 4 - [May 4,8:30 PM]
 **What I implemented**: 
-
+Added Semaphore to control CPU access.
 **Challenges encountered**: 
-
+Ensuring only one thread executes at a time without blocking others permanently.
 **How I solved it**: 
-
+Used a binary semaphore and ensured proper release using try-finally.
 **Testing approach**: 
-
+Verified that only one process runs at a time by observing output.
 **Time spent**: 
-
+1.5 hours
 ---
 
-### Entry 5 - [Date, Time]
+### Entry 5 - [May 5,7:00 PM]
 **What I implemented**: 
-
+Final improvements: logging system, statistics output, and UI formatting.
 **Challenges encountered**: 
-
+Avoiding concurrent modification issues in the execution log.
 **How I solved it**: 
-
+Added a separate lock (logLock) for the log list.
 **Testing approach**: 
-
+Performed full testing with multiple runs and different scenarios.
 **Time spent**: 
-
+2 hours
 ---
 
 ## Part 2: Technical Questions (1 mark)
